@@ -339,7 +339,7 @@ h3 {
     text-indent: 2em;
 }
 
-/* ====================表情包样式==================== */
+/* ====================表情包样式（电脑端）==================== */
 .inline-image {
     display: inline-block;
     border-radius: 10px;
@@ -380,36 +380,66 @@ h3 {
     clear: both;
 }
 
-/* ====================移动端表情包适配（核心）==================== */
+/* ====================移动端表情包适配（保留文字环绕）==================== */
 @media (max-width: 768px) {
     .inline-image {
-        max-width: 100px !important;
-        /* 手机端表情包变小 */
-        margin: 8px auto !important;
-        /* 居中+减小间距 */
+        max-width: 140px !important;
+        /* 手机端适当缩小 */
         border-radius: 8px !important;
-        /* 更圆润 */
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-        display: block !important;
-        /* 强制换行 */
-        float: none !important;
-        /* 取消浮动避免排版混乱 */
+        /* 关键：不设置 display: block 和 float: none */
     }
 
+    /* 左浮动图片 - 手机端保留环绕 */
+    .inline-image.left {
+        float: left !important;
+        margin-left: 0 !important;
+        margin-right: 12px !important;
+        margin-top: 5px !important;
+    }
+
+    /* 右浮动图片 - 手机端保留环绕 */
+    .inline-image.right {
+        float: right !important;
+        margin-right: 0 !important;
+        margin-left: 12px !important;
+        margin-top: 5px !important;
+    }
+
+    /* 全宽图片 - 手机端居中 */
     .inline-image.full-width {
+        float: none !important;
+        display: block !important;
         max-width: 85% !important;
         margin: 15px auto !important;
     }
-}
 
-@media (max-width: 480px) {
-    .inline-image {
-        max-width: 80px !important;
-        border-radius: 6px !important;
+    /* 段落优化 - 让文字更贴近图片 */
+    .story-paragraph p {
+        line-height: 1.7 !important;
+        text-align: justify !important;
+    }
+
+    /* 调整段落间距 */
+    .story-paragraph {
+        padding: 20px 15px !important;
     }
 }
 
-/* ====================强调文本==================== */
+/* 超小屏进一步优化 */
+@media (max-width: 480px) {
+    .inline-image {
+        max-width: 100px !important;
+        border-radius: 6px !important;
+    }
+
+    .inline-image.left,
+    .inline-image.right {
+        margin: 5px 8px 5px 0 !important;
+    }
+}
+
+/* ====================强调文本样式==================== */
 .highlight {
     color: #c41e3a;
     font-weight: bold;
@@ -564,7 +594,7 @@ em {
     }
 
     .story-paragraph {
-        padding: 15px;
+        padding: 20px 15px;
         margin: 15px 0;
     }
 }
