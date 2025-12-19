@@ -16,10 +16,11 @@
         <canvas id="snowCanvas"></canvas>
     </div>
 
-    <!-- 左侧悬停控制面板（仅播放按钮和音量） -->
+    <!-- 左侧悬停控制面板（仅播放按钮） -->
     <div class="hover-trigger-zone"></div>
     <div class="video-control hidden">
         <button id="playPause" class="video-play">▶️ 播放</button>
+        <!-- 音量控制 -->
         <div class="volume-control">
             <label for="volumeSlider">🔊 音量</label>
             <input type="range" id="volumeSlider" min="0" max="100" value="60" class="volume-slider">
@@ -56,6 +57,7 @@
 
             <!-- 故事正文 -->
             <div class="story-body">
+                <!-- 所有段落内容保持不变... -->
                 <section class="story-paragraph">
                     <h3> 玖福记</h3>
                     <p>故事的起因就是在买鸡架的路上，
@@ -72,7 +74,7 @@
                         <strong>张券</strong>
                         （凭票根去免费取自己姓名的玛瑙石），
                         <img src="placeholder-coupon.jpg" alt="优惠券" class="inline-image left" style="width: 200px;">
-                        本着<em>有便宜不占是憨厚土八蛋</em>的原则就想去给哈基咩选三个字放gift箱子里得了～～
+                        本着<em>有便宜不占是憨厚王八蛋</em>的原则就想去给哈基咩选三个字放gift箱子里得了～～
                     <p>
                         <em>(PS. 有个小插曲来者，本来以为哈基咩最后一个字是<span class="highlight">“婕”</span>来着，结果越想越不对劲，跑去
                             建工20级大群里搜了一下，发现是<span class="highlight">“捷”</span>，sorry,sorry～～)</em>
@@ -148,3 +150,41 @@
 </body>
 
 </html>
+
+<!-- 手机端专属引导 -->
+<div class="mobile-guide" id="mobileGuide">
+    <p>👈 点击左侧播放视频</p>
+    <button onclick="this.parentElement.remove()">知道了</button>
+</div>
+
+<style>
+    .mobile-guide {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(196, 30, 58, 0.9);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 25px;
+        z-index: 2000;
+        display: none;
+        animation: slideUp 0.5s ease;
+    }
+
+    @media (max-width: 768px) {
+        .mobile-guide {
+            display: block;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translate(-50%, 100px);
+        }
+
+        to {
+            transform: translate(-50%, 0);
+        }
+    }
+</style>
