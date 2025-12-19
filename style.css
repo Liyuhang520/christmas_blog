@@ -1,5 +1,5 @@
 /* ========================================= */
-/* 圣诞节主题网站样式 - 完整优化版 */
+/* 圣诞节主题网站样式 - 无二维码功能 */
 /* ========================================= */
 
 * {
@@ -482,34 +482,6 @@ em {
     margin-top: 20px;
     display: block;
     color: #c41e3a;
-}
-
-/* 二维码区域 */
-.qr-section {
-    text-align: center;
-    margin-top: 60px;
-    padding-top: 40px;
-    border-top: 2px solid rgba(196, 30, 58, 0.3);
-}
-
-.qr-section h3 {
-    color: #0a5f38;
-    margin-bottom: 25px;
-    font-size: 1.5em;
-}
-
-#qrcode {
-    display: inline-block;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.qr-tip {
-    margin-top: 15px;
-    color: #666;
-    font-size: 1em;
 }
 
 /* 鼠标跟随图标 */

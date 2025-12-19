@@ -1,13 +1,13 @@
 // =========================================
-// 圣诞节网站交互脚本 - 完整优化版
+// 圣诞节网站交互脚本 - 完整优化版（无二维码）
 // =========================================
 
 // 雪花和鼠标配置
 const SNOW_CONFIG = {
-    density: 150,
-    speed: 2,
+    density: 250,
+    speed: 5,
     minSize: 2,
-    maxSize: 6,
+    maxSize: 12,
     color: 'rgba(255, 255, 255, 0.8)'
 };
 
@@ -237,34 +237,12 @@ class VideoController {
 }
 
 // =========================================
-// 二维码生成类
-// =========================================
-class QRCodeGenerator {
-    constructor() {
-        const currentURL = window.location.href;
-        this.generateQR(currentURL);
-    }
-
-    generateQR(url) {
-        new QRCode(document.getElementById("qrcode"), {
-            text: url,
-            width: 180,
-            height: 180,
-            colorDark: "#c41e3a",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
-    }
-}
-
-// =========================================
 // 初始化所有功能
 // =========================================
 document.addEventListener('DOMContentLoaded', () => {
     const snow = new SnowAnimation();
     const mouseTrail = new MouseTrail();
-    const qr = new QRCodeGenerator();
     const video = new VideoController();
     video.init();
-    console.log('🎬 完整版圣诞节网站初始化完成！');
+    console.log('🎬 圣诞节网站初始化完成（无二维码功能）');
 });
