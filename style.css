@@ -1,5 +1,5 @@
 /* ========================================= */
-/* 圣诞节主题网站样式 - 左侧悬停版 */
+/* 圣诞节主题网站样式 - 完整优化版 */
 /* ========================================= */
 
 * {
@@ -40,112 +40,30 @@ body {
     pointer-events: none;
 }
 
-/* ====================NEW: 左侧悬停触发区域==================== */
+/* ====================左侧悬停触发区域==================== */
 .hover-trigger-zone {
     position: fixed;
     top: 0;
     left: 0;
     width: 50px;
-    /* 悬停区域宽度 */
     height: 100vh;
     z-index: 1001;
-    /* 高于控制面板 */
     cursor: pointer;
     background: transparent;
-    /* 完全透明 */
 }
 
-/* == NEW: 引导提示样式 == */
-.guide-tooltip {
-    position: fixed;
-    left: 80px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1002;
-    background: linear-gradient(135deg, rgba(196, 30, 58, 0.95), rgba(139, 0, 0, 0.95));
-    color: white;
-    padding: 20px 25px;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(196, 30, 58, 0.5);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    animation: pulseGlow 2s ease-in-out infinite;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 215, 0, 0.6);
-}
-
-.guide-tooltip.hidden {
-    display: none;
-}
-
-.guide-arrow {
-    font-size: 3em;
-    animation: bounceLeft 1.5s ease-in-out infinite;
-    color: #ffd700;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-}
-
-.guide-text {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.guide-text p {
-    margin: 0;
-    font-size: 1.1em;
-    font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.guide-text p:first-child {
-    font-size: 1.3em;
-    color: #ffd700;
-}
-
-/* 脉冲发光动画 */
-@keyframes pulseGlow {
-
-    0%,
-    100% {
-        box-shadow: 0 8px 25px rgba(196, 30, 58, 0.5);
-        transform: translateY(-50%) scale(1);
-    }
-
-    50% {
-        box-shadow: 0 8px 35px rgba(196, 30, 58, 0.8), 0 0 20px rgba(255, 215, 0, 0.5);
-        transform: translateY(-50%) scale(1.05);
-    }
-}
-
-/* 箭头弹跳动画 */
-@keyframes bounceLeft {
-
-    0%,
-    100% {
-        transform: translateX(0);
-    }
-
-    50% {
-        transform: translateX(-10px);
-    }
-}
-
-/* == NEW: 紧凑版控制面板（初始隐藏）== */
+/* ====================控制面板==================== */
 .video-control {
     position: fixed;
     top: 50%;
     left: -120px;
-    /* 初始隐藏在左边缘外 */
     transform: translateY(-50%);
     z-index: 1000;
     background: rgba(255, 255, 255, 0.95);
     padding: 15px;
     border-radius: 0 10px 10px 0;
-    /* 右侧圆角 */
     box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: left 0.3s ease;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -153,94 +71,11 @@ body {
     backdrop-filter: blur(5px);
 }
 
-/* 显示状态 - 由 JavaScript 控制 */
 .video-control.show {
     left: 50px;
-    /* 紧贴触发区域右侧 */
 }
 
-/* ====================视频容器（右上角）==================== */
-.video-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 320px;
-    height: 180px;
-    z-index: 999;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #000;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-#bgVideo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: none;
-}
-
-#bgVideo[src] {
-    display: block;
-}
-
-.video-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    background: linear-gradient(135deg, #c41e3a, #8b0000);
-    padding: 20px;
-    text-align: center;
-}
-
-.video-placeholder p {
-    font-size: 1.2em;
-    margin-bottom: 5px;
-}
-
-.video-placeholder small {
-    font-size: 0.85em;
-    opacity: 0.8;
-}
-
-/* 按钮样式（紧凑版） */
-.video-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 15px 10px;
-    margin: 5px;
-    background: #c41e3a;
-    color: white;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 12px;
-    width: 110px;
-    height: 80px;
-    text-align: center;
-    line-height: 1.2;
-}
-
-.video-btn:hover {
-    background: #a0172e;
-    transform: scale(1.05);
-}
-
-.upload-icon {
-    width: 32px;
-    height: 32px;
-    margin-bottom: 6px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
+/* 播放按钮 */
 .video-play {
     display: inline-block;
     padding: 8px 15px;
@@ -261,11 +96,7 @@ body {
     transform: scale(1.05);
 }
 
-#videoFile {
-    display: none;
-}
-
-/* 音量控制样式 */
+/* 音量控制 */
 .volume-control {
     display: flex;
     flex-direction: column;
@@ -308,23 +139,6 @@ body {
 
 .volume-slider::-webkit-slider-thumb:hover {
     transform: scale(1.2);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-}
-
-.volume-slider::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #ffd700;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-}
-
-.volume-slider::-moz-range-thumb:hover {
-    transform: scale(1.2);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
 }
 
 #volumeValue {
@@ -333,6 +147,28 @@ body {
     color: #0a5f38;
     min-width: 35px;
     text-align: center;
+}
+
+/* ====================视频容器==================== */
+.video-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 320px;
+    height: 180px;
+    z-index: 999;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+#bgVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 /* ====================主内容层==================== */
@@ -503,7 +339,7 @@ h3 {
     text-indent: 2em;
 }
 
-/* 嵌入式图片样式 */
+/* ====================表情包样式==================== */
 .inline-image {
     display: inline-block;
     border-radius: 10px;
@@ -544,7 +380,36 @@ h3 {
     clear: both;
 }
 
-/* 强调文本 */
+/* ====================移动端表情包适配（核心）==================== */
+@media (max-width: 768px) {
+    .inline-image {
+        max-width: 100px !important;
+        /* 手机端表情包变小 */
+        margin: 8px auto !important;
+        /* 居中+减小间距 */
+        border-radius: 8px !important;
+        /* 更圆润 */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+        display: block !important;
+        /* 强制换行 */
+        float: none !important;
+        /* 取消浮动避免排版混乱 */
+    }
+
+    .inline-image.full-width {
+        max-width: 85% !important;
+        margin: 15px auto !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .inline-image {
+        max-width: 80px !important;
+        border-radius: 6px !important;
+    }
+}
+
+/* ====================强调文本==================== */
 .highlight {
     color: #c41e3a;
     font-weight: bold;
@@ -622,7 +487,6 @@ em {
     position: fixed;
     pointer-events: none;
     z-index: 998;
-    /* 调整z-index避免冲突 */
     font-size: 28px;
     animation: fadeOut 3.5s ease-out forwards;
 }
@@ -644,38 +508,52 @@ em {
     }
 }
 
-/* 响应式调整 */
-@media (max-width: 1200px) {
-    .content-layer {
-        margin: 30px;
-        max-width: calc(100% - 60px);
-    }
-}
-
+/* ====================移动端整体适配==================== */
 @media (max-width: 768px) {
-    .content-layer {
-        margin: 15px;
-        padding: 20px;
-        max-width: calc(100% - 30px);
+    .video-container {
+        width: 200px;
+        height: 112px;
+        right: 10px;
+        top: 10px;
     }
 
     .hover-trigger-zone {
         width: 30px;
     }
 
-    .video-container {
-        width: 200px;
-        height: 112px;
-        right: 10px;
+    .video-control {
+        left: -100px;
+        min-width: 90px;
+        padding: 8px;
+    }
+
+    .video-control.show {
+        left: 35px;
+    }
+
+    .video-play {
+        width: 80px;
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .volume-control {
+        display: none;
+    }
+
+    .content-layer {
+        margin: 10px;
+        padding: 15px;
+        border-radius: 15px;
     }
 
     .main-text {
-        font-size: 3em;
+        font-size: 2.5em;
     }
 
     .sub-text {
-        font-size: 2em;
-        margin-top: 80px;
+        font-size: 1.8em;
+        margin-top: 0;
     }
 
     .seal {
@@ -685,270 +563,20 @@ em {
         right: -30px;
     }
 
-    .inline-image {
-        max-width: 150px !important;
-        float: none !important;
-        display: block;
-        margin: 15px auto !important;
-    }
-
     .story-paragraph {
         padding: 15px;
+        margin: 15px 0;
     }
 }
 
-@keyframes fadeInOut {
-    0% {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    20% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    80% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    100% {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-}
-
-/* 在原有基础上添加/修改以下部分 */
-
-/* 左侧悬停触发区域 */
-.hover-trigger-zone {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 50px;
-    height: 100vh;
-    z-index: 1001;
-    cursor: pointer;
-    background: transparent;
-}
-
-/* 控制面板（仅播放按钮和音量） */
-.video-control {
-    position: fixed;
-    top: 50%;
-    left: -120px;
-    transform: translateY(-50%);
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 15px;
-    border-radius: 0 10px 10px 0;
-    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
-    transition: left 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-width: 120px;
-    backdrop-filter: blur(5px);
-}
-
-.video-control.show {
-    left: 50px;
-}
-
-/* 播放按钮 */
-.video-play {
-    display: inline-block;
-    padding: 8px 15px;
-    margin: 5px;
-    background: #c41e3a;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 14px;
-    width: 110px;
-    text-align: center;
-}
-
-.video-play:hover {
-    background: #a0172e;
-    transform: scale(1.05);
-}
-
-/* 音量控制 */
-.volume-control {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 10px;
-    background: rgba(196, 30, 58, 0.05);
-    border-radius: 10px;
-    margin: 5px;
-}
-
-.volume-control label {
-    font-size: 12px;
-    font-weight: bold;
-    color: #c41e3a;
-}
-
-.volume-slider {
-    width: 100%;
-    height: 6px;
-    border-radius: 5px;
-    background: linear-gradient(to right, #c41e3a 0%, #0a5f38 100%);
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-    cursor: pointer;
-}
-
-.volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #ffd700;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-}
-
-.volume-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-}
-
-#volumeValue {
-    font-size: 11px;
-    font-weight: bold;
-    color: #0a5f38;
-    min-width: 35px;
-    text-align: center;
-}
-
-/* 视频容器（右上角） */
-.video-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 320px;
-    height: 180px;
-    z-index: 999;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #000;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-#bgVideo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-/* 主内容层、标题、段落等样式保持不变... */
-/* ...请保留您原有的所有样式... */
-
-/* ====================移动端专属优化==================== */
-@media (max-width: 768px) {
-
-    /* 视频容器 - 手机适配 */
-    .video-container {
-        position: fixed !important;
-        top: 10px !important;
-        right: 10px !important;
-        width: 120px !important;
-        height: 68px !important;
-        z-index: 1000 !important;
-    }
-
-    /* 左侧控制面板 - 手机优化 */
-    .hover-trigger-zone {
-        width: 30px !important;
-    }
-
-    .video-control {
-        left: -100px !important;
-        min-width: 90px !important;
-        padding: 8px !important;
-    }
-
-    .video-control.show {
-        left: 35px !important;
-    }
-
-    /* 播放按钮 - 手机专用 */
-    .video-play {
-        width: 80px !important;
-        font-size: 12px !important;
-        padding: 6px 10px !important;
-    }
-
-    /* 音量控制 - 手机隐藏 */
-    .volume-control {
-        display: none !important;
-    }
-
-    /* 主内容 - 手机适配 */
-    .content-layer {
-        margin: 10px !important;
-        padding: 15px !important;
-        border-radius: 15px !important;
-    }
-
-    /* 书法标题 - 手机专用 */
-    .chinese-calligraphy-title {
-        flex-direction: column !important;
-        gap: 20px !important;
-        padding: 20px !important;
-    }
-
-    .main-text {
-        font-size: 2.5em !important;
-    }
-
-    .sub-text {
-        font-size: 1.8em !important;
-        margin-top: 0 !important;
-    }
-
-    /* 图片 - 手机适配 */
-    .inline-image {
-        max-width: 150px !important;
-        float: none !important;
-        display: block !important;
-        margin: 10px auto !important;
-    }
-
-    /* 段落 - 手机优化 */
-    .story-paragraph {
-        padding: 15px !important;
-        margin: 15px 0 !important;
-    }
-
-    /* 鼠标跟随 - 手机减少 */
-    .mouse-trail {
-        font-size: 20px !important;
-    }
-}
-
-/* 超小屏幕优化 */
 @media (max-width: 480px) {
     .video-container {
-        width: 100px !important;
-        height: 56px !important;
-        top: 5px !important;
-        right: 5px !important;
+        width: 150px;
+        height: 84px;
     }
 
     .main-text {
-        font-size: 2em !important;
+        font-size: 2em;
     }
 
     .chinese-calligraphy-title {

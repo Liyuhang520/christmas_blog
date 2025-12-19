@@ -1,15 +1,20 @@
 // =========================================
-// 圣诞节网站交互脚本 - 硬编码视频+控制按钮
+// 圣诞节网站交互脚本 - 完整优化版
 // =========================================
 
 // 雪花和鼠标配置
 const SNOW_CONFIG = {
-    density: 250, speed: 4, minSize: 2, maxSize: 10, color: 'rgba(255, 255, 255, 0.8)'
+    density: 150,
+    speed: 2,
+    minSize: 2,
+    maxSize: 6,
+    color: 'rgba(255, 255, 255, 0.8)'
 };
 
 const MOUSE_TRAIL_CONFIG = {
-    interval: 50, fadeDuration: 2000,
-    icons: ['🎁', '🍬', '🦌', '⭐', '❄️', '🎀', '🧸', '🎄']
+    interval: 150,
+    fadeDuration: 2000,
+    icons: ['🎁', '🍬', '🎅', '🦌', '⭐', '❄️', '🎀', '🧸', '🎄']
 };
 
 // 雪花动画类
@@ -135,7 +140,7 @@ class VideoController {
             }
         });
 
-        // 左侧悬停显示控制面板
+        // 悬停显示控制面板
         this.setupHoverListeners();
 
         // 播放/暂停按钮
@@ -144,7 +149,7 @@ class VideoController {
             this.togglePlayback();
         });
 
-        // 监听用户首次交互以恢复声音
+        // 监听用户首次交互恢复声音
         this.setupUserInteractionListener();
 
         // 视频事件监听
@@ -152,21 +157,18 @@ class VideoController {
             console.log('视频播放结束（循环中）');
             this.playPauseBtn.textContent = '⏸️ 等待中...';
             this.playPauseBtn.style.background = '#666';
-            setTimeout(() => {
-                this.playVideo();
-            }, 100);
+            setTimeout(() => this.playVideo(), 100);
         });
 
         this.bgVideo.addEventListener('error', (e) => {
             alert('❌ 视频加载失败，请检查文件是否存在');
         });
 
-        // ✅ 自动尝试播放（可能有声音）
+        // 自动尝试播放
         this.attemptInitialPlayback();
     }
 
     setupHoverListeners() {
-        // 显示/隐藏控制面板
         this.hoverZone.addEventListener('mouseenter', () => {
             this.videoControl.classList.add('show');
         });
@@ -179,7 +181,6 @@ class VideoController {
     }
 
     setupUserInteractionListener() {
-        // 首次交互时恢复声音
         const restoreSound = () => {
             if (!this.soundRestored && this.bgVideo.src) {
                 this.bgVideo.muted = false;
@@ -187,14 +188,12 @@ class VideoController {
                 console.log('🔊 用户交互后声音已恢复');
             }
         };
-
         const options = { once: true };
         document.addEventListener('click', restoreSound, options);
         document.addEventListener('mousemove', restoreSound, options);
     }
 
     attemptInitialPlayback() {
-        // 尝试自动播放（可能有声音）
         this.playVideo().then(() => {
             console.log('✅ 视频自动播放成功');
         }).catch(() => {
@@ -222,7 +221,6 @@ class VideoController {
             this.playPauseBtn.style.background = '#0a5f38';
             this.isPlaying = true;
         }).catch(e => {
-            console.warn('⚠️ 播放被阻止:', e.message);
             this.playPauseBtn.textContent = '▶️ 播放';
             this.playPauseBtn.style.background = '#c41e3a';
             this.isPlaying = false;
@@ -265,69 +263,8 @@ class QRCodeGenerator {
 document.addEventListener('DOMContentLoaded', () => {
     const snow = new SnowAnimation();
     const mouseTrail = new MouseTrail();
-    const video = new VideoController();
     const qr = new QRCodeGenerator();
-    video.init(); // 初始化视频控制
-    console.log('🎬 硬编码视频+控制按钮版初始化完成！');
-});
-
-// ====================移动端优化====================
-class MobileOptimizer {
-    constructor() {
-        this.isMobile = window.innerWidth <= 768;
-        this.init();
-    }
-
-    init() {
-        if (this.isMobile) {
-            this.optimizeVideo();
-            this.optimizeInteractions();
-            this.hideVolumeOnMobile();
-        }
-    }
-
-    optimizeVideo() {
-        // 手机端自动播放优化
-        const video = document.getElementById('bgVideo');
-        if (video) {
-            video.setAttribute('playsinline', '');
-            video.setAttribute('webkit-playsinline', '');
-
-            // 手机端静音自动播放
-            if (!video.muted) {
-                video.muted = true;
-                // 用户首次触摸时恢复声音
-                document.addEventListener('touchstart', () => {
-                    if (video.muted) {
-                        video.muted = false;
-                        console.log('📱 手机端声音已恢复');
-                    }
-                }, { once: true });
-            }
-        }
-    }
-
-    optimizeInteractions() {
-        // 手机端简化鼠标跟随
-        if (MOUSE_TRAIL_CONFIG.interval < 100) {
-            MOUSE_TRAIL_CONFIG.interval = 200; // 减少手机端特效
-            MOUSE_TRAIL_CONFIG.icons = ['🎁', '⭐', '❄️']; // 减少图标数量
-        }
-    }
-
-    hideVolumeOnMobile() {
-        // 手机端隐藏音量滑块（保留按钮）
-        const volumeControl = document.querySelector('.volume-control');
-        if (volumeControl) {
-            volumeControl.style.display = 'none';
-        }
-    }
-}
-
-// 在初始化时调用
-document.addEventListener('DOMContentLoaded', () => {
-    // ...原有初始化代码...
-
-    // 添加移动端优化
-    new MobileOptimizer();
+    const video = new VideoController();
+    video.init();
+    console.log('🎬 完整版圣诞节网站初始化完成！');
 });
