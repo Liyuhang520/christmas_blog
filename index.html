@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>坑蒙拐骗奇遇记 - Merry Christmas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- 背景层 -->
+    <div class="background-layer">
+        <img src="background1.jpg" alt="圣诞背景" class="bg-image">
+        <canvas id="snowCanvas"></canvas>
+    </div>
+
+    <!-- == NEW: 左侧悬停触发区域 == -->
+    <div class="hover-trigger-zone"></div>
+
+    <!-- == NEW: 引导提示 == -->
+    <div class="guide-tooltip" id="guideTooltip">
+        <div class="guide-arrow">←</div>
+        <div class="guide-text">
+            <p> 将鼠标移到左侧</p>
+            <p>上传并播放视频</p>
+        </div>
+    </div>
+
+    <!-- == NEW: 控制面板（紧凑版）== -->
+    <div class="video-control hidden">
+        <label for="videoFile" class="video-btn">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="2" />
+                <path d="M7 16V20C7 20.5523 7.44772 21 8 21H16C16.5523 21 17 20.5523 17 20V16" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" />
+                <path d="M12 8V14M12 8L9 11M12 8L15 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <circle cx="9" cy="10" r="1" fill="currentColor" />
+                <circle cx="15" cy="10" r="1" fill="currentColor" />
+            </svg>
+            <span>上传视频</span>
+        </label>
+        <input type="file" id="videoFile" accept="video/mp4">
+        <button id="playPause" class="video-play">▶️ 播放</button>
+
+        <!-- 音量控制 -->
+        <div class="volume-control">
+            <label for="volumeSlider">🔊 音量</label>
+            <input type="range" id="volumeSlider" min="0" max="100" value="80" class="volume-slider">
+            <span id="volumeValue">80%</span>
+        </div>
+    </div>
+
+    <!-- 视频容器（右上角） -->
+    <div class="video-container">
+        <video id="bgVideo" playsinline loop></video>
+        <div class="video-placeholder">
+            <p>🎬 暂无视频</p>
+            <small>请使用左侧控制面板上传</small>
+        </div>
+    </div>
+
+    <!-- 主内容层 -->
+    <main class="content-layer">
+        <!-- 内容保持不变... -->
+        <article class="story-container">
+            <!-- 标题区 -->
+            <header class="story-header">
+                <div class="chinese-calligraphy-title">
+                    <div class="main-text">
+                        <span>坑</span>
+                        <span>蒙</span>
+                        <span>拐</span>
+                        <span>骗</span>
+                    </div>
+                    <div class="sub-text">
+                        <span>奇</span>
+                        <span>遇</span>
+                        <span>记</span>
+                    </div>
+                    <div class="seal">圣诞版</div>
+                </div>
+                <h2>Merry Christmas~~ 这个哈基咩</h2>
+            </header>
+
+            <!-- 故事正文 -->
+            <div class="story-body">
+                <section class="story-paragraph">
+                    <h3> 玖福记</h3>
+                    <p>故事的起因就是在买鸡架的路上，
+                        <img src="placeholder-chicken.jpg" alt="沈阳鸡架" class="inline-image left">
+                        从<em>玖福记</em>出来，
+                        路过一个文创店，正好陪着舍友在里面逛了一会儿，买了个
+                        黑色的搞怪毛毛虫（相信你也已经看到了吧，嘿嘿～～）
+                    </p>
+                </section>
+
+                <section class="story-paragraph">
+                    <h3> 灾难降临</h3>
+                    <p>买完去收银台结账的时候，那个千杀的老板给了我一
+                        <strong>张券</strong>
+                        （凭票根去免费取自己姓名的玛瑙石），
+                        <img src="placeholder-coupon.jpg" alt="优惠券" class="inline-image left" style="width: 200px;">
+                        本着<em>有便宜不占是憨厚土八蛋</em>的原则就想去给哈基咩选三个字放gift箱子里得了～～
+                    <p>
+                        <em>(PS. 有个小插曲来者，本来以为哈基咩最后一个字是<span class="highlight">“婕”</span>来着，结果越想越不对劲，跑去
+                            建工20级大群里搜了一下，发现是<span class="highlight">“捷”</span>，sorry,sorry～～)</em>
+
+                    </p>
+                </section>
+
+                <section class="story-paragraph">
+                    <h3> 意外转折</h3>
+                    <p>谁知道前台又说了，
+                        <strong>第一个玛瑙石免费，后面两个玛瑙收费？？？</strong>
+                        <img src="placeholder-question.jpg" alt="三个问号" class="inline-image right" style="width: 180px;">
+                        三个问号已经表达不出我的心理状况了，这不是玩文字游戏嘛～～
+                    </p>
+                    <p>但又本着多一事不如少一事的原则，好事成双就买了。<em>（经典山东人享福咯～）</em></p>
+                </section>
+
+                <section class="story-paragraph">
+                    <h3> 天价账单</h3>
+                    <p>然后店员问我需不需要串起来，我也没想那么多，就随便说了句
+                        <span class="highlight">"OK"</span>
+                        <img src="placeholder-ok.jpg" alt="OK手势" class="inline-image left" style="width: 160px;">
+                    </p>
+                    <div class="highlight-box">
+                        <p>然后您老人家猜怎么着，最后给我递了个账单，要我<strong>半个月窝囊费</strong>（此处吐血三升）
+                            <img src="placeholder-blood.jpg" alt="吐血表情包" class="inline-image right"
+                                style="width: 150px;">
+                            而且不退不换。。。。。。我当时就是<em>路易十六摸不看头脑</em>，这不是被人当肥羊宰了么？淦！
+                        <p>
+                    </div>
+
+                </section>
+
+                <section class="story-paragraph">
+                    <h3> 中街祈福</h3>
+                    <p>OK，来源说清楚了，既然当冤大头了，
+                        <img src="placeholder-bracelet.jpg" alt="手串" class="inline-image left" style="width: 220px;">
+                        就把手串包了起来，去了<em>中街的大十面胡同</em>
+                        给哈基咩祈祈福～～
+                    </p>
+                    <p>也算是加持一些有益的东东吧（谁让哈基咩这两天有点厄运缠身捏）
+                        <img src="placeholder-flying-kick.jpg" alt="飞踢" class="inline-image right"
+                            style="width: 180px;">
+                    </p>
+                </section>
+
+                <section class="story-paragraph">
+                    <h3> 圣诞祝福</h3>
+                    <div class="christmas-message">
+                        <p><strong>Attention！！！</strong>虽然是个意外，但哈基咩也别撇了，
+                            <img src="placeholder-decoration.jpg" alt="圣诞装饰" class="inline-image left"
+                                style="width: 190px;">
+                            没事当个物件摆着呗。
+                        </p>
+                        <p class="big-text">
+                            <img src="placeholder-santa.jpg" alt="圣诞老人" class="inline-image right"
+                                style="width: 200px;">
+                            <strong>好了，就这样，圣诞快乐～～ </strong>
+                        </p>
+                    </div>
+                </section>
+            </div>
+
+
+        </article>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
