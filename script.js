@@ -1,27 +1,19 @@
 // =========================================
-// 圣诞节网站交互脚本 - 鼠标不暂停修复版
+// 圣诞节网站交互脚本 - 硬编码视频+控制按钮
 // =========================================
 
 // 雪花和鼠标配置
 const SNOW_CONFIG = {
-    density: 250, speed: 5, minSize: 3, maxSize: 10, color: 'rgba(255, 255, 255, 0.8)'
+    density: 250, speed: 4, minSize: 2, maxSize: 10, color: 'rgba(255, 255, 255, 0.8)'
 };
 
 const MOUSE_TRAIL_CONFIG = {
-    interval: 50,        // 减少间隔时间，增加密度
-    fadeDuration: 3500,  // 增加停留时间
+    interval: 50, fadeDuration: 2000,
     icons: ['🎁', '🍬', '🦌', '⭐', '❄️', '🎀', '🧸', '🎄']
-};
-
-// 存储配置
-const STORAGE_CONFIG = {
-    key: 'christmasVideoData',
-    maxAge: 7 * 24 * 60 * 60 * 1000 // 7天有效期
 };
 
 // 雪花动画类
 class SnowAnimation {
-    // ...保持不变...
     constructor() {
         this.canvas = document.getElementById('snowCanvas');
         this.ctx = this.canvas.getContext('2d');
@@ -77,7 +69,6 @@ class SnowAnimation {
 
 // 鼠标跟随类
 class MouseTrail {
-    // ...保持不变...
     constructor() {
         this.lastTime = 0;
         this.init();
@@ -112,131 +103,107 @@ class MouseTrail {
 }
 
 // =========================================
-// 视频控制类 - 完整优化版
+// 视频控制类 - 硬编码+自动恢复声音
 // =========================================
 class VideoController {
     constructor() {
-        this.videoFile = document.getElementById('videoFile');
         this.bgVideo = document.getElementById('bgVideo');
         this.playPauseBtn = document.getElementById('playPause');
-        this.videoControl = document.querySelector('.video-control');
-        this.videoPlaceholder = document.querySelector('.video-placeholder');
-        this.hoverZone = document.querySelector('.hover-trigger-zone');
         this.volumeSlider = document.getElementById('volumeSlider');
         this.volumeValue = document.getElementById('volumeValue');
-        this.guideTooltip = document.getElementById('guideTooltip');
+        this.hoverZone = document.querySelector('.hover-trigger-zone');
+        this.videoControl = document.querySelector('.video-control');
         this.isPlaying = false;
-        this.loopTimeout = null;
         this.soundRestored = false;
-        this.panelVisible = false;
         this.userPaused = false;
-        this.hideTimeout = null;
-
-        // 设置初始音量
-        this.bgVideo.volume = 0.8; // 80%
-
-        this.init();
     }
 
     init() {
-        this.restoreVideoFromStorage();
-
-        // 文件上传事件
-        this.videoFile.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file && file.type.startsWith('video/')) {
-                this.saveVideoToStorage(file);
-                this.loadVideoFromFile(file);
-            } else {
-                alert('请选择有效的视频文件！');
-            }
-        });
-
-        // 悬停监听逻辑
-        this.setupHoverListeners();
-
-        // 播放/暂停按钮
-        this.playPauseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            this.togglePlayback();
-        });
+        // 设置初始音量
+        this.bgVideo.volume = 0.6;
+        this.volumeSlider.value = 60;
+        this.volumeValue.textContent = '60%';
 
         // 音量控制
         this.volumeSlider.addEventListener('input', (e) => {
             const volume = e.target.value / 100;
             this.bgVideo.volume = volume;
             this.volumeValue.textContent = e.target.value + '%';
-            console.log('🔊 音量设置为:', e.target.value + '%');
+            if (this.bgVideo.muted && volume > 0) {
+                this.bgVideo.muted = false;
+                this.soundRestored = true;
+            }
         });
 
-        // 视频结束自动循环
+        // 左侧悬停显示控制面板
+        this.setupHoverListeners();
+
+        // 播放/暂停按钮
+        this.playPauseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.togglePlayback();
+        });
+
+        // 监听用户首次交互以恢复声音
+        this.setupUserInteractionListener();
+
+        // 视频事件监听
         this.bgVideo.addEventListener('ended', () => {
-            this.handleVideoEnd();
+            console.log('视频播放结束（循环中）');
+            this.playPauseBtn.textContent = '⏸️ 等待中...';
+            this.playPauseBtn.style.background = '#666';
+            setTimeout(() => {
+                this.playVideo();
+            }, 100);
         });
 
-        // 防止意外暂停
-        this.bgVideo.addEventListener('pause', (e) => {
-            if (this.isPlaying && !this.userPaused) {
-                console.log('⚠️ 检测到意外暂停，正在恢复...');
-                setTimeout(() => this.playVideo(), 50);
-            }
-        });
-
-        // 错误处理
         this.bgVideo.addEventListener('error', (e) => {
-            console.error('视频加载错误:', e);
-            alert('❌ 视频加载失败，请检查文件格式');
-            this.resetPlayer();
+            alert('❌ 视频加载失败，请检查文件是否存在');
         });
 
-        // 视频加载完成
-        this.bgVideo.addEventListener('loadeddata', () => {
-            console.log('✅ 视频加载成功');
-            this.videoPlaceholder.style.display = 'none';
-        });
+        // ✅ 自动尝试播放（可能有声音）
+        this.attemptInitialPlayback();
     }
 
-    // 悬停监听逻辑
     setupHoverListeners() {
+        // 显示/隐藏控制面板
         this.hoverZone.addEventListener('mouseenter', () => {
-            clearTimeout(this.hideTimeout);
-            this.panelVisible = true;
             this.videoControl.classList.add('show');
-            this.videoControl.classList.remove('hidden');
-
-            // 隐藏引导提示
-            if (this.guideTooltip) {
-                this.guideTooltip.classList.add('hidden');
-            }
         });
 
-        this.videoControl.addEventListener('mouseenter', () => {
-            clearTimeout(this.hideTimeout);
-            this.panelVisible = true;
-        });
-
-        this.hoverZone.addEventListener('mouseleave', (e) => {
-            if (!this.videoControl.contains(e.relatedTarget)) {
-                this.scheduleHide();
-            }
-        });
-
-        this.videoControl.addEventListener('mouseleave', (e) => {
-            if (!this.hoverZone.contains(e.relatedTarget)) {
-                this.scheduleHide();
-            }
+        this.videoControl.addEventListener('mouseleave', () => {
+            setTimeout(() => {
+                this.videoControl.classList.remove('show');
+            }, 200);
         });
     }
 
-    scheduleHide() {
-        this.panelVisible = false;
-        this.hideTimeout = setTimeout(() => {
-            this.videoControl.classList.remove('show');
-        }, 300);
+    setupUserInteractionListener() {
+        // 首次交互时恢复声音
+        const restoreSound = () => {
+            if (!this.soundRestored && this.bgVideo.src) {
+                this.bgVideo.muted = false;
+                this.soundRestored = true;
+                console.log('🔊 用户交互后声音已恢复');
+            }
+        };
+
+        const options = { once: true };
+        document.addEventListener('click', restoreSound, options);
+        document.addEventListener('mousemove', restoreSound, options);
     }
 
-    // 播放/暂停切换
+    attemptInitialPlayback() {
+        // 尝试自动播放（可能有声音）
+        this.playVideo().then(() => {
+            console.log('✅ 视频自动播放成功');
+        }).catch(() => {
+            console.log('⚠️ 自动播放失败，等待用户交互');
+            this.playPauseBtn.textContent = '▶️ 播放';
+            this.playPauseBtn.style.background = '#c41e3a';
+        });
+    }
+
     togglePlayback() {
         if (this.isPlaying) {
             this.pauseVideo();
@@ -245,25 +212,8 @@ class VideoController {
         }
     }
 
-    // 暂停视频
-    pauseVideo() {
-        this.userPaused = true;
-        this.bgVideo.pause();
-        this.playPauseBtn.textContent = '▶️ 播放';
-        this.playPauseBtn.style.background = '#c41e3a';
-        this.isPlaying = false;
-        if (this.loopTimeout) {
-            clearTimeout(this.loopTimeout);
-            this.loopTimeout = null;
-        }
-    }
-
-    // 播放视频
     playVideo() {
-        if (!this.bgVideo.src) {
-            console.warn('⚠️ 没有视频源');
-            return Promise.reject('No video source');
-        }
+        if (!this.bgVideo.src) return Promise.reject();
 
         this.userPaused = false;
 
@@ -271,7 +221,6 @@ class VideoController {
             this.playPauseBtn.textContent = '⏸️ 暂停';
             this.playPauseBtn.style.background = '#0a5f38';
             this.isPlaying = true;
-            console.log('✅ 视频播放中');
         }).catch(e => {
             console.warn('⚠️ 播放被阻止:', e.message);
             this.playPauseBtn.textContent = '▶️ 播放';
@@ -280,108 +229,15 @@ class VideoController {
         });
     }
 
-    // 从文件加载视频
-    loadVideoFromFile(file) {
-        const url = URL.createObjectURL(file);
-        this.bgVideo.src = url;
-        this.bgVideo.loop = true; // 启用原生循环，避免卡顿
-        this.videoPlaceholder.style.display = 'none';
-
-        // 隐藏引导提示（用户已经知道如何使用了）
-        if (this.guideTooltip) {
-            this.guideTooltip.classList.add('hidden');
-        }
-
-        // 等待视频加载完成后自动播放
-        const onLoadedData = () => {
-            console.log('✅ 视频数据加载完成，开始播放');
-            this.playVideo();
-            this.bgVideo.removeEventListener('loadeddata', onLoadedData);
-        };
-
-        this.bgVideo.addEventListener('loadeddata', onLoadedData);
-        this.bgVideo.load();
-    }
-
-    // 保存视频到 LocalStorage
-    saveVideoToStorage(file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const videoData = {
-                    data: e.target.result,
-                    name: file.name,
-                    type: file.type,
-                    timestamp: Date.now()
-                };
-                localStorage.setItem(STORAGE_CONFIG.key, JSON.stringify(videoData));
-                console.log('✅ 视频已保存到本地存储');
-            } catch (error) {
-                console.error('❌ 保存视频失败（可能文件过大）:', error);
-                alert('视频文件过大，无法保存到本地存储。建议使用小于5MB的视频。');
-            }
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // 从 LocalStorage 恢复视频
-    restoreVideoFromStorage() {
-        try {
-            const stored = localStorage.getItem(STORAGE_CONFIG.key);
-            if (!stored) return;
-
-            const videoData = JSON.parse(stored);
-
-            // 检查是否过期
-            if (Date.now() - videoData.timestamp > STORAGE_CONFIG.maxAge) {
-                localStorage.removeItem(STORAGE_CONFIG.key);
-                console.log('⏰ 存储的视频已过期');
-                return;
-            }
-
-            // 恢复视频
-            this.bgVideo.src = videoData.data;
-            this.bgVideo.loop = true; // 启用原生循环
-            this.videoPlaceholder.style.display = 'none';
-            console.log('✅ 已从本地存储恢复视频:', videoData.name);
-
-            // 等待视频加载完成后自动播放
-            const onLoadedData = () => {
-                console.log('✅ 恢复的视频加载完成，开始播放');
-                this.playVideo();
-                this.bgVideo.removeEventListener('loadeddata', onLoadedData);
-            };
-
-            this.bgVideo.addEventListener('loadeddata', onLoadedData);
-            this.bgVideo.load();
-        } catch (error) {
-            console.error('❌ 恢复视频失败:', error);
-            localStorage.removeItem(STORAGE_CONFIG.key);
-        }
-    }
-
-    // 视频结束处理（使用原生 loop 时不再需要手动处理）
-    handleVideoEnd() {
-        // 由于使用了 video.loop = true，视频会自动循环
-        // 这个方法保留以防需要其他逻辑
-        console.log('🔄 视频播放结束（自动循环中）');
-    }
-
-    // 重置播放器
-    resetPlayer() {
-        this.bgVideo.src = '';
-        this.videoPlaceholder.style.display = 'flex';
+    pauseVideo() {
+        this.userPaused = true;
+        this.bgVideo.pause();
         this.playPauseBtn.textContent = '▶️ 播放';
         this.playPauseBtn.style.background = '#c41e3a';
         this.isPlaying = false;
-        this.userPaused = false;
-        if (this.loopTimeout) {
-            clearTimeout(this.loopTimeout);
-            this.loopTimeout = null;
-        }
-        localStorage.removeItem(STORAGE_CONFIG.key);
     }
 }
+
 // =========================================
 // 二维码生成类
 // =========================================
@@ -411,5 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mouseTrail = new MouseTrail();
     const video = new VideoController();
     const qr = new QRCodeGenerator();
-    console.log('🎬 左侧悬停修复版初始化完成！');
+    video.init(); // 初始化视频控制
+    console.log('🎬 硬编码视频+控制按钮版初始化完成！');
 });
