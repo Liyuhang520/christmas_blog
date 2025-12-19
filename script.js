@@ -4,10 +4,10 @@
 
 // 雪花和鼠标配置
 const SNOW_CONFIG = {
-    density: 250,
-    speed: 5,
+    density: 150,
+    speed: 2,
     minSize: 2,
-    maxSize: 12,
+    maxSize: 6,
     color: 'rgba(255, 255, 255, 0.8)'
 };
 
@@ -15,6 +15,12 @@ const MOUSE_TRAIL_CONFIG = {
     interval: 150,
     fadeDuration: 2000,
     icons: ['🎁', '🍬', '🎅', '🦌', '⭐', '❄️', '🎀', '🧸', '🎄']
+};
+
+// 提示通知配置
+const HINT_CONFIG = {
+    autoHideDelay: 5000, // 5秒后自动隐藏
+    showDuration: 800    // 显示动画时长
 };
 
 // 雪花动画类
@@ -104,6 +110,77 @@ class MouseTrail {
                 icon.parentNode.removeChild(icon);
             }
         }, MOUSE_TRAIL_CONFIG.fadeDuration);
+    }
+}
+
+// =========================================
+// 页面提示通知类
+// =========================================
+class PageHint {
+    constructor() {
+        this.hint = document.getElementById('pageHint');
+        this.closeBtn = document.getElementById('hintClose');
+        this.isVisible = true;
+        this.autoHideTimer = null;
+        this.init();
+    }
+
+    init() {
+        // 延迟显示，让页面先渲染完成
+        setTimeout(() => {
+            this.show();
+            this.setupAutoHide();
+        }, 1000);
+
+        // 关闭按钮事件
+        this.closeBtn.addEventListener('click', () => {
+            this.hide();
+            this.clearAutoHide();
+        });
+
+        // 用户发现播放区域后自动隐藏
+        this.setupSmartHide();
+    }
+
+    show() {
+        this.hint.classList.add('show');
+        this.isVisible = true;
+    }
+
+    hide() {
+        this.hint.classList.remove('show');
+        this.isVisible = false;
+    }
+
+    setupAutoHide() {
+        this.autoHideTimer = setTimeout(() => {
+            if (this.isVisible) {
+                this.hide();
+            }
+        }, HINT_CONFIG.autoHideDelay);
+    }
+
+    clearAutoHide() {
+        if (this.autoHideTimer) {
+            clearTimeout(this.autoHideTimer);
+            this.autoHideTimer = null;
+        }
+    }
+
+    setupSmartHide() {
+        // 当用户鼠标移到左侧区域时，说明已发现功能，自动隐藏提示
+        const hoverZone = document.querySelector('.hover-trigger-zone');
+        const videoControl = document.querySelector('.video-control');
+
+        const hideOnDiscovery = () => {
+            if (this.isVisible) {
+                this.hide();
+                this.clearAutoHide();
+            }
+        };
+
+        hoverZone.addEventListener('mouseenter', hideOnDiscovery);
+        videoControl.addEventListener('mouseenter', hideOnDiscovery);
     }
 }
 
@@ -242,7 +319,8 @@ class VideoController {
 document.addEventListener('DOMContentLoaded', () => {
     const snow = new SnowAnimation();
     const mouseTrail = new MouseTrail();
+    const hint = new PageHint(); // 初始化提示通知
     const video = new VideoController();
     video.init();
-    console.log('🎬 圣诞节网站初始化完成（无二维码功能）');
+    console.log('🎬 圣诞节网站初始化完成（带提示功能）');
 });

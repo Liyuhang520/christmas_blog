@@ -484,6 +484,120 @@ em {
     color: #c41e3a;
 }
 
+/* ====================页面提示通知样式==================== */
+.page-hint {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    z-index: 2000;
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: none;
+}
+
+.page-hint.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: all;
+}
+
+.hint-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #c41e3a, #e63946);
+    color: white;
+    padding: 18px 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(196, 30, 58, 0.4);
+    position: relative;
+    min-width: 280px;
+}
+
+.hint-icon {
+    font-size: 2em;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.hint-text {
+    flex: 1;
+    line-height: 1.5;
+    font-size: 1.1em;
+}
+
+.hint-text strong {
+    display: block;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.hint-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    padding: 0;
+}
+
+.hint-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+/* 箭头指向左侧 */
+.hint-arrow {
+    position: absolute;
+    top: 100%;
+    left: 30px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #c41e3a;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .page-hint {
+        top: 30px;
+        width: 90%;
+    }
+
+    .hint-content {
+        padding: 15px 20px;
+        min-width: auto;
+    }
+
+    .hint-text {
+        font-size: 1em;
+    }
+
+    .hint-icon {
+        font-size: 1.5em;
+    }
+}
+
 /* 鼠标跟随图标 */
 .mouse-trail {
     position: fixed;
