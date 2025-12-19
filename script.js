@@ -270,3 +270,64 @@ document.addEventListener('DOMContentLoaded', () => {
     video.init(); // 初始化视频控制
     console.log('🎬 硬编码视频+控制按钮版初始化完成！');
 });
+
+// ====================移动端优化====================
+class MobileOptimizer {
+    constructor() {
+        this.isMobile = window.innerWidth <= 768;
+        this.init();
+    }
+
+    init() {
+        if (this.isMobile) {
+            this.optimizeVideo();
+            this.optimizeInteractions();
+            this.hideVolumeOnMobile();
+        }
+    }
+
+    optimizeVideo() {
+        // 手机端自动播放优化
+        const video = document.getElementById('bgVideo');
+        if (video) {
+            video.setAttribute('playsinline', '');
+            video.setAttribute('webkit-playsinline', '');
+
+            // 手机端静音自动播放
+            if (!video.muted) {
+                video.muted = true;
+                // 用户首次触摸时恢复声音
+                document.addEventListener('touchstart', () => {
+                    if (video.muted) {
+                        video.muted = false;
+                        console.log('📱 手机端声音已恢复');
+                    }
+                }, { once: true });
+            }
+        }
+    }
+
+    optimizeInteractions() {
+        // 手机端简化鼠标跟随
+        if (MOUSE_TRAIL_CONFIG.interval < 100) {
+            MOUSE_TRAIL_CONFIG.interval = 200; // 减少手机端特效
+            MOUSE_TRAIL_CONFIG.icons = ['🎁', '⭐', '❄️']; // 减少图标数量
+        }
+    }
+
+    hideVolumeOnMobile() {
+        // 手机端隐藏音量滑块（保留按钮）
+        const volumeControl = document.querySelector('.volume-control');
+        if (volumeControl) {
+            volumeControl.style.display = 'none';
+        }
+    }
+}
+
+// 在初始化时调用
+document.addEventListener('DOMContentLoaded', () => {
+    // ...原有初始化代码...
+
+    // 添加移动端优化
+    new MobileOptimizer();
+});

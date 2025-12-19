@@ -854,3 +854,104 @@ em {
 
 /* 主内容层、标题、段落等样式保持不变... */
 /* ...请保留您原有的所有样式... */
+
+/* ====================移动端专属优化==================== */
+@media (max-width: 768px) {
+
+    /* 视频容器 - 手机适配 */
+    .video-container {
+        position: fixed !important;
+        top: 10px !important;
+        right: 10px !important;
+        width: 120px !important;
+        height: 68px !important;
+        z-index: 1000 !important;
+    }
+
+    /* 左侧控制面板 - 手机优化 */
+    .hover-trigger-zone {
+        width: 30px !important;
+    }
+
+    .video-control {
+        left: -100px !important;
+        min-width: 90px !important;
+        padding: 8px !important;
+    }
+
+    .video-control.show {
+        left: 35px !important;
+    }
+
+    /* 播放按钮 - 手机专用 */
+    .video-play {
+        width: 80px !important;
+        font-size: 12px !important;
+        padding: 6px 10px !important;
+    }
+
+    /* 音量控制 - 手机隐藏 */
+    .volume-control {
+        display: none !important;
+    }
+
+    /* 主内容 - 手机适配 */
+    .content-layer {
+        margin: 10px !important;
+        padding: 15px !important;
+        border-radius: 15px !important;
+    }
+
+    /* 书法标题 - 手机专用 */
+    .chinese-calligraphy-title {
+        flex-direction: column !important;
+        gap: 20px !important;
+        padding: 20px !important;
+    }
+
+    .main-text {
+        font-size: 2.5em !important;
+    }
+
+    .sub-text {
+        font-size: 1.8em !important;
+        margin-top: 0 !important;
+    }
+
+    /* 图片 - 手机适配 */
+    .inline-image {
+        max-width: 150px !important;
+        float: none !important;
+        display: block !important;
+        margin: 10px auto !important;
+    }
+
+    /* 段落 - 手机优化 */
+    .story-paragraph {
+        padding: 15px !important;
+        margin: 15px 0 !important;
+    }
+
+    /* 鼠标跟随 - 手机减少 */
+    .mouse-trail {
+        font-size: 20px !important;
+    }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 480px) {
+    .video-container {
+        width: 100px !important;
+        height: 56px !important;
+        top: 5px !important;
+        right: 5px !important;
+    }
+
+    .main-text {
+        font-size: 2em !important;
+    }
+
+    .chinese-calligraphy-title {
+        transform: rotate(0deg) !important;
+    }
+}
